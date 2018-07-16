@@ -140,10 +140,17 @@ Note that the second approach will not include the `map` operation of its grandp
 
 ## Including Simulacrum
 
-This project supports Scala 2.10, 2.11 2.12, and 2.13.0-M3. The project is based on macro paradise. To use the project, add the following to your build.sbt:
+This project supports Scala 2.10, 2.11 2.12, and 2.13.0-M4. The project is based on macro paradise. To use the project, add the following to your build.sbt:
 
 ```scala
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+libraryDependencies ++= {
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, v)) if v <= 12 =>
+      Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full))
+    case _ =>
+      Nil
+  }
+}
 
 libraryDependencies += "com.github.mpilquist" %% "simulacrum" % "0.12.0"
 ```
